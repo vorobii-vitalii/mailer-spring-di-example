@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="mailSender" class="com.example.service.impl.MailSenderImpl">
+        <constructor-arg name="host" value="HOST_NAME" />
+        <constructor-arg name="user" value="USER_NAME" />
+        <constructor-arg name="password" value="PASSWORD" />
+        <constructor-arg name="authEnabled" value="true" />
+        <constructor-arg name="port" value="PORT" />
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:./data/db"/>
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="userRepository" class="com.example.repository.impl.UserRepositoryImpl" init-method="populateUsers">
+        <constructor-arg name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="userService" class="com.example.service.impl.UserServiceImpl">
+        <constructor-arg name="userRepository" ref="userRepository" />
+        <constructor-arg name="mailSender" ref="mailSender" />
+    </bean>
+
+</beans>
